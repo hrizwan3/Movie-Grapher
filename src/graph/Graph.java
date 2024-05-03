@@ -8,44 +8,35 @@ import java.util.*;
 
 public class Graph {
     // might be nice to create one Node class and extend it for ActorNode and MovieNode
-    private HashMap<MovieNode, HashSet<ActorNode>> movies;
-    private HashMap<ActorNode, HashSet<MovieNode>> actors;
+    // assumes no duplicate movie or actor names
+    HashMap<String, MovieNode> movieMap;
+    HashMap<String, ActorNode> actorMap;
 
     public Graph() {
-        this.movies = new HashMap<>();
-        this.actors = new HashMap<>();
+        this.movieMap = new HashMap<>();
+        this.actorMap = new HashMap<>();
     }
 
-    public Set<MovieNode> getMovies() {
-        return movies.keySet();
+    public HashSet<MovieNode> getMovies() {
+        return (HashSet) movieMap.values();
     }
 
-    public Set<ActorNode> getActors() {
-        return actors.keySet();
+    public Collection<ActorNode> getActors() {
+        return actorMap.values();
     }
 
-    public void addEdge(MovieNode movie, ActorNode actor) {
+    public void addEdge(String movieTitle, ActorNode actor) {
+        MovieNode movie = movieMap.get(movieTitle);
+        if (movie == null) {
+            System.out.println("Movie not found: " + movieTitle);
+            return;
+        }
+
         movie.addActor(actor);
         actor.addMovie(movie);
 
-        HashSet<MovieNode> actorMovies = actors.get(actor);
-        HashSet<ActorNode> movieActors = movies.get(movie);
-
-        if (actorMovies == null) {
-            actorMovies = new HashSet<>();
-            actors.put(actor, actorMovies);
-        } else {
-            actorMovies.add(movie);
-            actors.put(actor, actorMovies);
-        }
-
-        if (movieActors == null) {
-            movieActors = new HashSet<>();
-            movies.put(movie, movieActors);
-        } else {
-            actorMovies.add(movie);
-            movies.put(movie, movieActors);
-        }
+        actorMap.putIfAbsent(actor.getName(), actor);
+        movieMap.putIfAbsent(movieTitle, movie);
     }
 
     public void readData(String filename) {
@@ -69,10 +60,23 @@ public class Graph {
                 String mainGenre = data[9];
 
 
-                MovieNode movie = new MovieNode(movieTitle, year, totalGross, runtime, mainGenre, director);
+                MovieNode movie;
                 ActorNode actorNode = new ActorNode(actor);
 
-                addEdge(movie, actorNode);
+                // might be a little buggy rn:
+                // if a movie is already in the map, grow its directors and actors accordingly
+                // else create a new movie
+                if (movieMap.containsKey(movieTitle)) {
+                    movie = movieMap.get(movieTitle);
+                    movie.addDirector(director);
+                    movie.addActor(actorNode);
+                } else {
+                     movie = new MovieNode(movieTitle, year, totalGross, runtime, mainGenre, director);
+                }
+
+                movieMap.put(movieTitle, movie);
+                actorMap.putIfAbsent(actor, actorNode); // add actor to map if not already there
+                addEdge(movieTitle, actorMap.get(actor));
 
                 line = br.readLine();
             }

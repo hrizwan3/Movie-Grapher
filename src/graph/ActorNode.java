@@ -2,7 +2,7 @@ package graph;
 
 import java.util.*;
 
-public class ActorNode {
+public class ActorNode implements Node {
     private String name;
     private HashSet<MovieNode> movies;
 
@@ -15,7 +15,7 @@ public class ActorNode {
         return name;
     }
 
-    public HashSet<MovieNode> getMovies() {
+    public HashSet<MovieNode> getNeighbors() {
         return movies;
     }
 

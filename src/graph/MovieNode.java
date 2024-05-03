@@ -2,7 +2,7 @@ package graph;
 
 import java.util.*;
 
-public class MovieNode {
+public class MovieNode implements Node {
     private String title;
     private int year;
     private double totalGross;
@@ -47,7 +47,7 @@ public class MovieNode {
         return genre;
     }
 
-    public HashSet<ActorNode> getActors() {
+    public HashSet<ActorNode> getNeighbors() {
         return actors;
     }
 
@@ -75,5 +75,10 @@ public class MovieNode {
     @Override
     public int hashCode() {
         return Objects.hash(title);
+    }
+
+    @Override
+    public String getName() {
+        return this.title;
     }
 }
