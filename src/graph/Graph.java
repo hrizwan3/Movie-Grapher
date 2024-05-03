@@ -6,25 +6,46 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Represents a graph of movies and actors.
+ * 
+ * @author Andrew Lukashchuk
+ * @author Hassan Rizwan
+ */
 public class Graph {
-    // might be nice to create one Node class and extend it for ActorNode and MovieNode
-    // assumes no duplicate movie or actor names
+    /**
+     * The movies in the graph.
+     */
     HashMap<String, MovieNode> movieMap;
+
+    /**
+     * The actors in the graph.
+     */
     HashMap<String, ActorNode> actorMap;
 
+    /**
+     * Constructs a graph with no movies or actors.
+     */
     public Graph() {
-        this.movieMap = new HashMap<>();
-        this.actorMap = new HashMap<>();
+        movieMap = new HashMap<>();
+        actorMap = new HashMap<>();
     }
 
-    public HashSet<MovieNode> getMovies() {
-        return (HashSet) movieMap.values();
+    /**
+     * Gets the movies in the graph.
+     * 
+     * @return the movies in the graph
+     */
+    public Set<MovieNode> getMovies() {
+        return new HashSet<>(movieMap.values());
     }
 
-    public Collection<ActorNode> getActors() {
-        return actorMap.values();
-    }
-
+    /**
+     * Adds an edge between a movie and an actor in the Graph.
+     * 
+     * @param movieTitle the title of the movie
+     * @param actor the actor to add an edge to
+     */
     public void addEdge(String movieTitle, ActorNode actor) {
         MovieNode movie = movieMap.get(movieTitle);
         if (movie == null) {
@@ -39,44 +60,49 @@ public class Graph {
         movieMap.putIfAbsent(movieTitle, movie);
     }
 
+    /**
+     * Reads data from a CSV file and populates the graph with movies and actors.
+     * 
+     * @param filename the name of the file to read from
+     */
     public void readData(String filename) {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(filename));
-            String line = br.readLine(); // skip header
-            line = br.readLine();
+            String line = br.readLine();
+            line = br.readLine(); // Read twice to skip header
             while (line != null) {
-                // regex source: https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
+                // Regex source: https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
                 String regex = ",(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
                 String[] data = line.split(regex); // splits by commas unless they're in quotes
+
+                // Read values from line
                 String movieTitle = data[1];
                 int year = Integer.parseInt(data[2]);
                 String director = data[3];
-                String actor = data[4];
-                double rating = Double.parseDouble(data[5]); // unused
+                String actorName = data[4];
+                double rating = Double.parseDouble(data[5]);
                 int runtime = Integer.parseInt(data[6]);
-                String censor = data[7]; // unused
+                String censor = data[7];
                 double totalGross = Double.parseDouble(data[8]);
                 String mainGenre = data[9];
 
 
-                MovieNode movie;
-                ActorNode actorNode = new ActorNode(actor);
+                MovieNode movieNode;
+                ActorNode actorNode = new ActorNode(actorName);
 
-                // might be a little buggy rn:
-                // if a movie is already in the map, grow its directors and actors accordingly
-                // else create a new movie
+                // If a movie is already there, add the director and actor, else create a new node
                 if (movieMap.containsKey(movieTitle)) {
-                    movie = movieMap.get(movieTitle);
-                    movie.addDirector(director);
-                    movie.addActor(actorNode);
+                    movieNode = movieMap.get(movieTitle);
+                    movieNode.addDirector(director);
+                    movieNode.addActor(actorNode);
                 } else {
-                     movie = new MovieNode(movieTitle, year, totalGross, runtime, mainGenre, director);
+                    movieNode = new MovieNode(movieTitle, year, totalGross, runtime, mainGenre, director);
                 }
 
-                movieMap.put(movieTitle, movie);
-                actorMap.putIfAbsent(actor, actorNode); // add actor to map if not already there
-                addEdge(movieTitle, actorMap.get(actor));
+                movieMap.putIfAbsent(movieTitle, movieNode);
+                actorMap.putIfAbsent(actorName, actorNode);
+                addEdge(movieTitle, actorMap.get(actorName));
 
                 line = br.readLine();
             }

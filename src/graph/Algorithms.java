@@ -2,10 +2,21 @@ package graph;
 
 import java.util.*;
 
+/**
+ * This class contains algorithms that can be performed on the graph.
+ * 
+ * @author Andrew Lukashchuk
+ * @author Hassan Rizwan
+ */
 public class Algorithms {
-
-    // idk if this works (haven't yet tested)
-    // also it might be better to decouple bfs from this function
+    /**
+     * Gets the distance of the input movie from the Dark Knight
+     * in the provided graph.
+     * 
+     * @param g the graph to search
+     * @param movie the movie to find the distance from the Dark Knight
+     * @return the distance of the input movie from the Dark Knight
+     */
     public static int getDarkKnightScore(Graph g, String movie) {
         String darkKnight = "The Dark Knight";
         MovieNode darkKnightMovie = g.movieMap.get(darkKnight);
@@ -42,6 +53,13 @@ public class Algorithms {
     }
 
     // get a movie recommendation based on some actor
+    /**
+     * Gets recommended movies based on an input actor.
+     * 
+     * @param g the graph to search
+     * @param actor the actor to base recommendations on
+     * @return the list of recommended movies
+     */
     public static ArrayList<MovieNode> getRecommendedMovies(Graph g, String actor) {
         ArrayList<MovieNode> recommendations = new ArrayList<>();
         ActorNode actorNode = g.actorMap.get(actor);
@@ -63,10 +81,14 @@ public class Algorithms {
         return recommendations;
     }
 
-
-    // get a movie recommendation based on a list of movies
-    // use triadic closure based on input movies
-    // haven't tested yet
+    /**
+     * Gets recommended movies based on a list of input movies.
+     * Uses triadic closure based on the input movies to generate results.
+     * 
+     * @param g the graph to search
+     * @param movies the list of movies to base recommendations on
+     * @return the list of recommended movies
+     */
     public static ArrayList<MovieNode> getRecommendedMovies(Graph g, ArrayList<String> movies) {
         ArrayList<MovieNode> inputMovies = new ArrayList<>();
         for (String title : movies) {
@@ -89,7 +111,7 @@ public class Algorithms {
                 }
             }
         }
+
         return recommendations;
     }
 }
-
