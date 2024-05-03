@@ -57,14 +57,14 @@ public class Graph {
             while (line != null) {
                 // regex source: https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
                 String regex = ",(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
-                String[] data = line.split(regex); // splits by commas
+                String[] data = line.split(regex); // splits by commas unless they're in quotes
                 String movieTitle = data[1];
                 int year = Integer.parseInt(data[2]);
                 String director = data[3];
                 String actor = data[4];
-                double rating = Double.parseDouble(data[5]);
+                double rating = Double.parseDouble(data[5]); // unused
                 int runtime = Integer.parseInt(data[6]);
-                String censor = data[7];
+                String censor = data[7]; // unused
                 double totalGross = Double.parseDouble(data[8]);
                 String mainGenre = data[9];
 
