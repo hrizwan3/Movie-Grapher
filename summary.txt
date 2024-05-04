@@ -28,6 +28,22 @@ violate their Terms of Service this way.
 
 Categories Used:
 
-Graph and graph algorithms:
+    Graph and graph algorithms:
 
-Social Networks: 
+    Social Networks: 
+
+Work Breakdown:
+
+    Hassan Rizwan:
+
+    Cleaning the dataset in a Jupyter Notebook so that it can be used
+    Creating the parser in Java for the .csv file (with help of the cited regex example)
+    Creating the Graph interfaces and classes
+    Designing the Algorithms used for distance and recommendations
+
+    Andrew Lukashchuk:
+
+    Creating the user shell and parsing commands
+    Refining the commands to work on all user inputs
+    Fixing minor bugs in the algorithms to work with the implementation of the graph
+    Documentation including comments in code and descriptions of functions
