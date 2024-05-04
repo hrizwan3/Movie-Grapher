@@ -3,6 +3,12 @@ import java.util.Set;
 
 import graph.*;
 
+/**
+ * The main class for the program.
+ * 
+ * @author Andrew Lukashchuk
+ * @author Hassan Rizwan
+ */
 public class Main {
     public static void main(String[] args) {
         // Initialize the graph to the imdb dataset
@@ -85,6 +91,13 @@ public class Main {
         }
     }
 
+    /**
+     * Parses the command and calls the appropriate algorithm.
+     * 
+     * @param command the command to parse
+     * @param input the input to the command
+     * @param g the graph to search
+     */
     public static void parseCommand(int command, String input, Graph g) {
         switch (command) {
             case 1:
