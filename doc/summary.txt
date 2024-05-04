@@ -28,9 +28,19 @@ violate their Terms of Service this way.
 
 Categories Used:
 
-    Graph and graph algorithms:
+    Graph and graph algorithms: A bipartite graph is created with the two 
+    categories being movies and actors. The Breadth First Search algorithm
+    is used to find the distance between any two movies, actors, or both and
+    also to find the farthest movies and/or movies from any given actor or
+    movie.
 
-    Social Networks: 
+    Social Networks: Various features of social networks are considered in
+    our project. Neighborhood overlap and triadic closure are used to design 
+    recommendations of movies to the user based on inputs. The graph as a 
+    whole can even be considered an Affiliation Network with the movies being
+    the "interests" and the actors being the people. In this way, the 
+    recommendation algorithms using membership closure and neighborhood overlap
+    makes sense and results in the algorithms providing accurate results.
 
 Work Breakdown:
 
