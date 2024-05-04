@@ -177,31 +177,49 @@ public class Algorithms {
     }
 
     /**
-     * Gets recommended movies based on an input actor.
+     * Gets top 10 recommended movies based on an input actor using triadic closure.
      * 
      * @param g the graph to search
      * @param actor the actor to base recommendations on
      * @return the list of recommended movies
      */
-    public static ArrayList<MovieNode> getRecommendedMovies(Graph g, String actor) {
-        ArrayList<MovieNode> recommendations = new ArrayList<>();
+    public static List<MovieNode> getRecommendedMovies(Graph g, String actor) {
+        List<MovieNode> recommendations = new ArrayList<>();
+        HashMap<MovieNode, Integer> recommendationRank = new HashMap<>();
         ActorNode actorNode = g.actorMap.get(actor);
-        if (actorNode == null) return recommendations; // early return if no actor found
+        if (actorNode == null) {
+            return recommendations;
+        }
 
-        HashSet<Node> visitedMovies = new HashSet<>(actorNode.getNeighbors());
         for (MovieNode movie : actorNode.getNeighbors()) {
             for (ActorNode coActor : movie.getNeighbors()) {
                 if (!coActor.equals(actorNode)) {
                     for (MovieNode coActorMovie : coActor.getNeighbors()) {
-                        if (!visitedMovies.contains(coActorMovie)) {
-                            recommendations.add(coActorMovie);
-                            visitedMovies.add(coActorMovie);
+                        if (!recommendationRank.containsKey(coActorMovie)) {
+                            recommendationRank.put(coActorMovie, 0);
+                        } else {
+                            recommendationRank.put(coActorMovie, recommendationRank.get(coActorMovie) + 1);
                         }
                     }
                 }
             }
         }
+
+        List<Map.Entry<MovieNode, Integer>> entries = new ArrayList<>(recommendationRank.entrySet());
+
+        Collections.sort(entries, new Comparator<Map.Entry<MovieNode, Integer>>() {
+            public int compare(Map.Entry<MovieNode, Integer> a, Map.Entry<MovieNode, Integer> b) {
+                return b.getValue().compareTo(a.getValue());
+            }
+        });
+
+        int topLimit = Math.min(10, entries.size());  
+        for (int i = 0; i < topLimit; i++) {
+            recommendations.add(entries.get(i).getKey());
+        }
+        
         return recommendations;
+
     }
 
     /**
@@ -212,8 +230,10 @@ public class Algorithms {
      * @param movies the list of movies to base recommendations on
      * @return the list of recommended movies
      */
-    public static ArrayList<MovieNode> getRecommendedMovies(Graph g, ArrayList<String> movies) {
-        ArrayList<MovieNode> inputMovies = new ArrayList<>();
+    public static List<MovieNode> getRecommendedMovies(Graph g, List<String> movies) {
+        List<MovieNode> recommendations = new ArrayList<>();
+        HashMap<MovieNode, Integer> recommendationRank = new HashMap<>();
+        List<MovieNode> inputMovies = new ArrayList<>();
         for (String title : movies) {
             MovieNode movie = g.movieMap.get(title);
             if (movie != null) {
@@ -221,20 +241,31 @@ public class Algorithms {
             }
         }
 
-        HashSet<Node> visitedMovies = new HashSet<>(inputMovies);
-        ArrayList<MovieNode> recommendations = new ArrayList<>();
-
         for (MovieNode movie : inputMovies) {
             for (ActorNode actor : movie.getNeighbors()) {
                 for (MovieNode neighborMovie : actor.getNeighbors()) {
-                    if (!visitedMovies.contains(neighborMovie)) {
-                        recommendations.add(neighborMovie);
-                        visitedMovies.add(neighborMovie);
+                    if (!recommendationRank.containsKey(neighborMovie)) {
+                        recommendationRank.put(neighborMovie, 0);
+                    } else {
+                        recommendationRank.put(neighborMovie, recommendationRank.get(neighborMovie) + 1);
                     }
                 }
             }
         }
 
+        List<Map.Entry<MovieNode, Integer>> entries = new ArrayList<>(recommendationRank.entrySet());
+
+        Collections.sort(entries, new Comparator<Map.Entry<MovieNode, Integer>>() {
+            public int compare(Map.Entry<MovieNode, Integer> a, Map.Entry<MovieNode, Integer> b) {
+                return b.getValue().compareTo(a.getValue());
+            }
+        });
+
+        int topLimit = Math.min(10, entries.size());  
+        for (int i = 0; i < topLimit; i++) {
+            recommendations.add(entries.get(i).getKey());
+        }
+        
         return recommendations;
     }
 }

@@ -1,5 +1,4 @@
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 import graph.*;
 
@@ -66,6 +65,18 @@ public class Main {
                     System.out.print("Input movie: $ ");
                     command = scanner.nextLine();
                     parseCommand(7, command, graph);
+                    break;
+                case "8":
+                    System.out.println("What are some recommended movies for (input actor)?");
+                    System.out.print("Input actor: $ ");
+                    command = scanner.nextLine();
+                    parseCommand(8, command, graph);
+                    break;
+                case "9":
+                    System.out.println("What are some recommended movies based on (input movie(s))?");
+                    System.out.print("Input movie 1: $ ");
+                    command = scanner.nextLine();
+                    parseCommand(9, command, graph);
                     break;
                 case "help":
                     System.out.println("1. What are the farthest movies from (input movie)?");
@@ -148,6 +159,29 @@ public class Main {
                 String actor3 = scanner3.nextLine();
                 double shortestPath3 = (((double) Algorithms.getScoreFromMovie(g, input, actor3)) / 2.0);
                 System.out.println("The shortest path between " + input + " and " + actor3 + " is: " + shortestPath3);
+                break;
+            case 8:
+                List<MovieNode> recommendedMovies = Algorithms.getRecommendedMovies(g, input);
+                System.out.println("The recommended movies for " + input + " are:");
+                for (MovieNode movie : recommendedMovies) {
+                    System.out.println("    " + movie.getTitle());
+                }
+                break;
+            case 9:
+                System.out.print("Input movie 2: $ ");
+                Scanner scanner4 = new Scanner(System.in);
+                List<String> movies = new ArrayList<>();
+                movies.add(input);
+                String movie3 = scanner4.nextLine();
+                movies.add(movie3);
+                System.out.print("Input movie 3 (Leave Blank if Just 2 Desired): $ ");
+                String movie4 = scanner4.nextLine();
+                movies.add(movie4);
+                List<MovieNode> recommendedMovies2 = Algorithms.getRecommendedMovies(g, movies);
+                System.out.println("The recommended movies for " + input + ", " + movie3 + ", and " + movie4 + " are:");
+                for (MovieNode movie : recommendedMovies2) {
+                    System.out.println("    " + movie.getTitle());
+                }
                 break;
             default:
                 System.out.println("Invalid command.");
