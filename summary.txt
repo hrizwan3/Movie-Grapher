@@ -1,3 +1,33 @@
 IMDb Scraper
 
-This project 
+Description:
+
+This project serves to provide various functions on movies, using
+the actors of the movies to make connections. For example, we can find
+the actors with the farthest distance from each other, or we can find the
+farthest movies from actors. The limitations of the Bacon Number only taking
+in actors as inputs are not here, as movies and actors can be used in
+either order when finding the farthest or any arbitrary distances between
+two movies, actors, or one of each. Additionally, our recommendation algorithms
+use both triadic closure and neighborhood overlap to recommend the top 10 
+movies to a user based on either a list of up to 3 input movies or an input
+of the user's favorite actor. These two recommendation algorithms use the 
+features of the neighborhood in the Graph to provide movies which would likely
+be similar to the user's taste and recommend them. 
+
+The program runs in a basic user shell, where the user can type 'help' to see 
+the commands accepted by the program. After seeing them, the user can simply
+type a number 1-9 to access the prompt for a command. At this point, the user
+can provide their input and the graph based on the IMDb database will have
+the algorithms performed on it to return the output to the user. The dataset
+was cleaned in a Jupyter notebook, which is provided in the code. Originally,
+we had wanted to webscrape the IMDb website ourselves and output the data, 
+but unfortunately IMDb does not allow webscraping, but using their data from 
+datasets for personal, non-commercial projects is allowed, so we do not
+violate their Terms of Service this way. 
+
+Categories Used:
+
+Graph and graph algorithms:
+
+Social Networks: 
