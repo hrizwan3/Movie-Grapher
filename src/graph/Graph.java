@@ -24,11 +24,17 @@ public class Graph {
     HashMap<String, ActorNode> actorMap;
 
     /**
+     * The adjacency list of the graph.
+     */
+    HashMap<Node, HashSet<Node>> adjList;
+
+    /**
      * Constructs a graph with no movies or actors.
      */
     public Graph() {
         movieMap = new HashMap<>();
         actorMap = new HashMap<>();
+        adjList = new HashMap<>();
     }
 
     /**
@@ -46,18 +52,17 @@ public class Graph {
      * @param movieTitle the title of the movie
      * @param actor the actor to add an edge to
      */
-    public void addEdge(String movieTitle, ActorNode actor) {
-        MovieNode movie = movieMap.get(movieTitle);
-        if (movie == null) {
-            System.out.println("Movie not found: " + movieTitle);
-            return;
-        }
+    public void addEdge(MovieNode movieNode, ActorNode actorNode) {
+        movieNode.addActor(actorNode);
+        actorNode.addMovie(movieNode);
 
-        movie.addActor(actor);
-        actor.addMovie(movie);
+        actorMap.putIfAbsent(actorNode.getName(), actorNode);
+        movieMap.putIfAbsent(movieNode.getTitle(), movieNode);
 
-        actorMap.putIfAbsent(actor.getName(), actor);
-        movieMap.putIfAbsent(movieTitle, movie);
+        adjList.putIfAbsent(movieNode, new HashSet<>());
+        adjList.putIfAbsent(actorNode, new HashSet<>());
+        adjList.get(movieNode).add(actorNode);
+        adjList.get(actorNode).add(movieNode);
     }
 
     /**
@@ -86,23 +91,25 @@ public class Graph {
                 String censor = data[7];
                 double totalGross = Double.parseDouble(data[8]);
                 String mainGenre = data[9];
-
-
-                MovieNode movieNode;
-                ActorNode actorNode = new ActorNode(actorName);
-
+                
                 // If a movie is already there, add the director and actor, else create a new node
+                MovieNode movieNode;
                 if (movieMap.containsKey(movieTitle)) {
                     movieNode = movieMap.get(movieTitle);
-                    movieNode.addDirector(director);
-                    movieNode.addActor(actorNode);
                 } else {
                     movieNode = new MovieNode(movieTitle, year, totalGross, runtime, mainGenre, director);
                 }
 
-                movieMap.putIfAbsent(movieTitle, movieNode);
-                actorMap.putIfAbsent(actorName, actorNode);
-                addEdge(movieTitle, actorMap.get(actorName));
+                ActorNode actorNode;
+                if (actorMap.containsKey(actorName)) {
+                    actorNode = actorMap.get(actorName);
+                } else {
+                    actorNode = new ActorNode(actorName);
+                }
+
+                movieNode.addDirector(director);
+                movieNode.addActor(actorNode);
+                addEdge(movieNode, actorNode);
 
                 line = br.readLine();
             }
